@@ -35,27 +35,31 @@ def get_terminal_size():
 def main():
     master, slave = pty.openpty()
 
-    def resize_pty(signum=None, frame=None):
-        rows, cols = get_terminal_size()
-        set_pty_window_size(slave, rows, cols)
+    # Set initial terminal size from environment variables
+    cols = int(os.environ.get('COLUMNS', '80'))
+    rows = int(os.environ.get('LINES', '24'))
+    set_pty_window_size(slave, rows, cols)
 
-    resize_pty()
-    signal.signal(signal.SIGWINCH, resize_pty)
+    # Get vault path from environment variable, fallback to current directory
+    vault_path = os.environ.get('VAULT_PATH', os.getcwd())
 
     shell = subprocess.Popen(
         ['/bin/zsh'],
         stdin=slave,
         stdout=slave,
         stderr=slave,
+        cwd=vault_path,
         preexec_fn=os.setsid
     )
 
     os.close(slave)
 
     stdin_fd = sys.stdin.fileno()
-    old_tty = termios.tcgetattr(stdin_fd)
+    stdout_fd = sys.stdout.fileno()
+
+    # Don't set raw mode since we're running as a subprocess
+    # Just forward data between stdin/stdout and the PTY
     try:
-        tty.setraw(stdin_fd)
         while True:
             if shell.poll() is not None:
                 break
@@ -63,20 +67,29 @@ def main():
             ready, _, _ = select.select([sys.stdin, master], [], [], 0.1)
 
             if sys.stdin in ready:
-                data = os.read(stdin_fd, 1024)
-                if not data:
+                try:
+                    data = os.read(stdin_fd, 1024)
+                    if not data:
+                        break
+                    os.write(master, data)
+                except OSError:
                     break
-                os.write(master, data)
 
             if master in ready:
                 try:
                     output = os.read(master, 1024)
                     if output:
-                        os.write(sys.stdout.fileno(), output)
+                        os.write(stdout_fd, output)
+                        sys.stdout.flush()
                 except OSError:
                     break
+    except KeyboardInterrupt:
+        pass
     finally:
-        termios.tcsetattr(stdin_fd, termios.TCSADRAIN, old_tty)
+        # Clean up
+        if shell.poll() is None:
+            shell.terminate()
+        os.close(master)
 
 
 if __name__ == '__main__':
