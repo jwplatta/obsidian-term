@@ -171,10 +171,4 @@ MIT License - see [LICENSE](LICENSE) file for details.
 
 ## Changelog
 
-See [CHANGELOG](CHANGELOG)
-
----
-
-**Like this plugin?** Please star the repository and leave a review in the Obsidian community!
-
-**Found a bug?** Please report it in [GitHub Issues](https://github.com/jwplatta/obsidian-terminal/issues).
+See [CHANGELOG](CHANGELOG.md)
