@@ -45,15 +45,6 @@ const calculateTerminalDimensions = (container: HTMLElement): TerminalDimensions
   const cols = Math.max(10, Math.floor((containerWidth - padding) / charWidth));
   const rows = Math.max(5, Math.floor((containerHeight - padding) / charHeight));
 
-  console.log('Terminal dimensions calculated:', {
-    containerWidth,
-    containerHeight,
-    charWidth,
-    charHeight,
-    cols,
-    rows
-  });
-
   return { cols, rows };
 };
 
@@ -78,7 +69,6 @@ const TerminalComponent = ({ pluginPath, vaultPath, defaultShell, onExit }: Term
 
           // Only resize if dimensions actually changed
           if (newDimensions.cols !== terminal.cols || newDimensions.rows !== terminal.rows) {
-            console.log('Resizing terminal:', newDimensions);
             terminal.resize(newDimensions.cols, newDimensions.rows);
           }
         }
@@ -87,7 +77,6 @@ const TerminalComponent = ({ pluginPath, vaultPath, defaultShell, onExit }: Term
       resizeObserver.observe(terminalRef.current);
 
       return () => {
-        console.log('Cleaning up terminal');
         resizeObserver.disconnect();
         // Clean up PTY process first
         if ((terminal as any).cleanup) {

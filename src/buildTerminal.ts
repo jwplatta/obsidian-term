@@ -9,7 +9,6 @@ export const buildTerminal = (terminalRef: React.RefObject<HTMLDivElement>, cols
     if (typeof document !== 'undefined' && document.body) {
       const computedStyle = getComputedStyle(document.body);
       const value = computedStyle.getPropertyValue(cssVar).trim();
-      console.log(`CSS Variable ${cssVar}:`, value);
       return value;
     }
     return '#1e1e1e';
@@ -48,11 +47,6 @@ export const buildTerminal = (terminalRef: React.RefObject<HTMLDivElement>, cols
     const basePath = pluginPath || __dirname;
     const ptyHelperPath = path.join(basePath, 'pty_helper.py');
 
-    // console.log('Starting PTY process with path:', ptyHelperPath);
-    // console.log('Plugin path:', pluginPath);
-    // console.log('Vault path:', vaultPath);
-    // console.log('__dirname:', __dirname);
-
     ptyProcess = spawn('python3', [ptyHelperPath], {
       stdio: ['pipe', 'pipe', 'pipe'],
       env: {
@@ -64,8 +58,6 @@ export const buildTerminal = (terminalRef: React.RefObject<HTMLDivElement>, cols
         SHELL: defaultShell || '/bin/zsh',
       }
     });
-
-    console.log('PTY process spawned with PID:', ptyProcess.pid);
 
     // Handle PTY output
     ptyProcess.stdout?.on('data', (data: Buffer) => {
@@ -80,12 +72,9 @@ export const buildTerminal = (terminalRef: React.RefObject<HTMLDivElement>, cols
 
     // Handle PTY process exit
     ptyProcess.on('close', (code: number | null, signal: string | null) => {
-      console.log(`PTY process exited with code ${code}, signal: ${signal}`);
-
       // Only auto-close if it's a clean exit (code 0) or explicit exit command
       // Don't auto-close on errors or startup failures
       if (onExit && code === 0) {
-        console.log('PTY process exited cleanly, calling onExit callback');
         onExit();
       } else {
         terminal.write(`\r\nPTY process exited with code ${code}, signal: ${signal}\r\n`);
@@ -95,7 +84,6 @@ export const buildTerminal = (terminalRef: React.RefObject<HTMLDivElement>, cols
 
     // Handle PTY errors
     ptyProcess.on('error', (error: Error) => {
-      console.log('PTY Error:', error.message);
       // Don't auto-close on errors, let user see the error message
       terminal.write(`\r\nPTY Error: ${error.message}\r\n`);
       terminal.write('Press any key to restart...\r\n');
@@ -116,7 +104,6 @@ export const buildTerminal = (terminalRef: React.RefObject<HTMLDivElement>, cols
   terminal.attachCustomKeyEventHandler((event: KeyboardEvent) => {
     // Debug key events
     if ((event.metaKey || event.ctrlKey) && event.key === 'k') {
-      console.log('Clear shortcut detected:', {
         key: event.key,
         metaKey: event.metaKey,
         ctrlKey: event.ctrlKey,

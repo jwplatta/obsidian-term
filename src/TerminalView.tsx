@@ -42,22 +42,17 @@ export class TerminalView extends ItemView {
 
 		const vaultPath = (this.app.vault.adapter as any).basePath;
 		const fullPluginPath = path.join(vaultPath, this.plugin.manifest.dir);
-		
-		console.log('Vault path:', vaultPath);
-		console.log('Plugin manifest dir:', this.plugin.manifest.dir);
-		console.log('Full plugin path:', fullPluginPath);
-		
+
 		this.root = createRoot(container);
 		const handleTerminalExit = () => {
-			console.log('Terminal exited, closing leaf');
 			this.leaf.detach();
 		};
 
 		this.root.render(
 			<StrictMode>
-				<TerminalComponent 
-					pluginPath={fullPluginPath} 
-					vaultPath={vaultPath} 
+				<TerminalComponent
+					pluginPath={fullPluginPath}
+					vaultPath={vaultPath}
 					defaultShell={this.plugin.settings.defaultShell}
 					onExit={handleTerminalExit}
 				/>
