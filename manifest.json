@@ -3,7 +3,7 @@
 	"name": "Obsidian Terminal",
 	"version": "1.0.0",
 	"minAppVersion": "0.15.0",
-	"description": "Terminal interface for Obsidian with basic command functionality",
+	"description": "Full-featured terminal interface plugin for Obsidian with native shell integration",
 	"author": "Joseph Platta",
 	"authorUrl": "https://github.com/jwplatta",
 	"isDesktopOnly": true
