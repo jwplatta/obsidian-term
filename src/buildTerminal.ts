@@ -4,7 +4,7 @@ import { FitAddon } from "@xterm/addon-fit";
 import { spawn, ChildProcess } from 'child_process';
 import * as path from 'path';
 
-export const buildTerminal = (terminalRef: React.RefObject<HTMLDivElement>, pluginPath?: string, vaultPath?: string, onExit?: () => void) => {
+export const buildTerminal = (terminalRef: React.RefObject<HTMLDivElement>, cols: number, rows: number, pluginPath?: string, vaultPath?: string, onExit?: () => void) => {
   const getComputedCSSValue = (cssVar: string): string => {
     if (typeof document !== 'undefined' && document.body) {
       const computedStyle = getComputedStyle(document.body);
@@ -20,8 +20,8 @@ export const buildTerminal = (terminalRef: React.RefObject<HTMLDivElement>, plug
   const textAccent = getComputedCSSValue('--text-accent') || '#ffffff';
 
   const terminal = new Terminal({
-    cols: 100,
-    rows: 40,
+    cols: cols,
+    rows: rows,
     cursorBlink: true,
     theme: {
       background: backgroundPrimary,
@@ -69,10 +69,12 @@ export const buildTerminal = (terminalRef: React.RefObject<HTMLDivElement>, plug
     // Handle PTY output
     ptyProcess.stdout?.on('data', (data: Buffer) => {
       terminal.write(data.toString());
+      terminal.scrollToBottom();
     });
 
     ptyProcess.stderr?.on('data', (data: Buffer) => {
       terminal.write(data.toString());
+      terminal.scrollToBottom();
     });
 
     // Handle PTY process exit
