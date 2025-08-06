@@ -2,15 +2,16 @@ import { ItemView, WorkspaceLeaf, Plugin } from 'obsidian';
 import { createRoot, Root } from 'react-dom/client';
 import { StrictMode } from 'react';
 import * as path from 'path';
-import TerminalComponent from './TerminalComponent'
+import TerminalComponent from './TerminalComponent';
+import ObsidianTerminalPlugin from '../main';
 
 export const TERMINAL_VIEW_TYPE = 'terminal-view';
 
 export class TerminalView extends ItemView {
 	root: Root | null = null;
-	plugin: Plugin;
+	plugin: ObsidianTerminalPlugin;
 
-	constructor(leaf: WorkspaceLeaf, plugin: Plugin) {
+	constructor(leaf: WorkspaceLeaf, plugin: ObsidianTerminalPlugin) {
 		super(leaf);
 		this.plugin = plugin;
 	}
@@ -57,6 +58,7 @@ export class TerminalView extends ItemView {
 				<TerminalComponent 
 					pluginPath={fullPluginPath} 
 					vaultPath={vaultPath} 
+					defaultShell={this.plugin.settings.defaultShell}
 					onExit={handleTerminalExit}
 				/>
 			</StrictMode>

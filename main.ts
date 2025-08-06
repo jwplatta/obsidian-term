@@ -1,8 +1,13 @@
 import { Plugin } from 'obsidian';
 import { TerminalView, TERMINAL_VIEW_TYPE } from './src/TerminalView';
+import { ObsidianTerminalSettings, ObsidianTerminalSettingTab, DEFAULT_SETTINGS } from './src/settings';
+import { SelectShellModal } from './src/selectShellModal';
 
 export default class ObsidianTerminalPlugin extends Plugin {
+	settings: ObsidianTerminalSettings;
+
 	async onload() {
+		await this.loadSettings();
 		// Register terminal view with plugin instance
 		this.registerView(TERMINAL_VIEW_TYPE, (leaf) => new TerminalView(leaf, this));
 
@@ -15,6 +20,16 @@ export default class ObsidianTerminalPlugin extends Plugin {
 			name: 'New Terminal',
 			callback: () => this.activateView()
 		});
+
+		this.addCommand({
+			id: 'select-shell',
+			name: 'Select Shell',
+			callback: () => {
+				new SelectShellModal(this.app, this).open();
+			}
+		});
+
+		this.addSettingTab(new ObsidianTerminalSettingTab(this.app, this));
 	}
 
 	async activateView() {
@@ -27,5 +42,13 @@ export default class ObsidianTerminalPlugin extends Plugin {
 		}
 
 		workspace.revealLeaf(leaf);
+	}
+
+	async loadSettings() {
+		this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
+	}
+
+	async saveSettings() {
+		await this.saveData(this.settings);
 	}
 }

@@ -42,9 +42,12 @@ def main():
 
     # Get vault path from environment variable, fallback to current directory
     vault_path = os.environ.get('VAULT_PATH', os.getcwd())
+    
+    # Get shell from environment variable, fallback to zsh
+    shell_path = os.environ.get('SHELL', '/bin/zsh')
 
     shell = subprocess.Popen(
-        ['/bin/zsh'],
+        [shell_path],
         stdin=slave,
         stdout=slave,
         stderr=slave,

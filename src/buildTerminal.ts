@@ -4,7 +4,7 @@ import { FitAddon } from "@xterm/addon-fit";
 import { spawn, ChildProcess } from 'child_process';
 import * as path from 'path';
 
-export const buildTerminal = (terminalRef: React.RefObject<HTMLDivElement>, cols: number, rows: number, pluginPath?: string, vaultPath?: string, onExit?: () => void) => {
+export const buildTerminal = (terminalRef: React.RefObject<HTMLDivElement>, cols: number, rows: number, pluginPath?: string, vaultPath?: string, defaultShell?: string, onExit?: () => void) => {
   const getComputedCSSValue = (cssVar: string): string => {
     if (typeof document !== 'undefined' && document.body) {
       const computedStyle = getComputedStyle(document.body);
@@ -61,6 +61,7 @@ export const buildTerminal = (terminalRef: React.RefObject<HTMLDivElement>, cols
         COLUMNS: terminal.cols.toString(),
         LINES: terminal.rows.toString(),
         VAULT_PATH: vaultPath || process.cwd(),
+        SHELL: defaultShell || '/bin/zsh',
       }
     });
 

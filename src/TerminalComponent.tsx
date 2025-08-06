@@ -4,6 +4,7 @@ import { buildTerminal } from './buildTerminal';
 interface TerminalComponentProps {
   pluginPath?: string;
   vaultPath?: string;
+  defaultShell?: string;
   onExit?: () => void;
 }
 
@@ -56,7 +57,7 @@ const calculateTerminalDimensions = (container: HTMLElement): TerminalDimensions
   return { cols, rows };
 };
 
-const TerminalComponent = ({ pluginPath, vaultPath, onExit }: TerminalComponentProps) => {
+const TerminalComponent = ({ pluginPath, vaultPath, defaultShell, onExit }: TerminalComponentProps) => {
   const terminalRef = useRef(null);
 
   useEffect(() => {
@@ -64,7 +65,7 @@ const TerminalComponent = ({ pluginPath, vaultPath, onExit }: TerminalComponentP
 
     // Calculate initial dimensions
     const dimensions = calculateTerminalDimensions(terminalRef.current);
-    const terminal = buildTerminal(terminalRef, dimensions.cols, dimensions.rows, pluginPath, vaultPath, onExit);
+    const terminal = buildTerminal(terminalRef, dimensions.cols, dimensions.rows, pluginPath, vaultPath, defaultShell, onExit);
 
     // Open terminal
     if (terminalRef.current) {
