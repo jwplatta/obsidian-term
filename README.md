@@ -1,9 +1,8 @@
 # Obsidian Term
 
-A full-featured terminal interface plugin for Obsidian that brings native terminal functionality directly into your knowledge workspace. Built with React and xterm.js, it provides a seamless command-line experience within Obsidian.
+A simple terminal interface plugin for Obsidian that brings native terminal functionality directly into your knowledge workspace. Built with React and xterm.js, it provides a seamless command-line experience within Obsidian.
 
 ![Plugin Version](https://img.shields.io/badge/version-1.0.0-blue)
-![Obsidian Downloads](https://img.shields.io/badge/dynamic/json?logo=obsidian&color=%23483699&label=downloads&query=%24%5B%22obsidian-terminal%22%5D.downloads&url=https%3A%2F%2Fraw.githubusercontent.com%2Fobsidianmd%2Fobsidian-releases%2Fmaster%2Fcommunity-plugin-stats.json)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
 ## Features
@@ -38,14 +37,14 @@ A full-featured terminal interface plugin for Obsidian that brings native termin
 4. Install and enable the plugin
 
 ### Manual Installation
-1. Download the latest release from [GitHub Releases](https://github.com/jwplatta/obsidian-terminal/releases)
-2. Extract files to `<vault>/.obsidian/plugins/obsidian-terminal/`
+1. Download the latest release from [GitHub Releases](https://github.com/jwplatta/obsidian-term/releases)
+2. Extract files to `<vault>/.obsidian/plugins/obsidian-term/`
 3. Reload Obsidian and enable the plugin in Community Plugins settings
 
 ### For Developers
 ```bash
-git clone https://github.com/jwplatta/obsidian-terminal.git
-cd obsidian-terminal
+git clone https://github.com/jwplatta/obsidian-term.git
+cd obsidian-term
 npm install
 npm run build
 ```
@@ -54,7 +53,7 @@ npm run build
 
 ### Opening a Terminal
 **Method 1: Ribbon Icon**
-- Click the terminal icon (=�) in the left sidebar
+- Click the terminal icon in the left sidebar
 
 **Method 2: Command Palette**
 - Press `Cmd/Ctrl + P` to open command palette
@@ -64,13 +63,8 @@ npm run build
 - Set a custom hotkey in Obsidian Settings > Hotkeys > New Terminal
 
 ### Terminal Shortcuts
-- **Clear Terminal**: `Ctrl + K`
+- **Clear Terminal**: `Ctrl + K` since `Cmd + K` is used for new links in Obsidian.
 - **Standard terminal shortcuts** work as expected (`Ctrl+C`, `Ctrl+Z`, etc.)
-
-### Multiple Terminals
-- Each "New Terminal" command creates a separate terminal instance
-- Switch between terminals using Obsidian's tab system
-- Each terminal maintains its own session and history
 
 ## Requirements
 
@@ -80,14 +74,12 @@ npm run build
 - **Node.js**: For development/building from source
 
 ### Obsidian Version
-- Minimum Obsidian version: **0.15.0**
 - Tested with Obsidian versions: 0.15.0+
 
 ### Platform Support
-- **macOS**: Full support
+- On works on **macOS**
 
 ## Configuration
-
 Currently, the plugin uses sensible defaults. Future versions will include:
 
 - Shell preference selection
@@ -112,16 +104,15 @@ Currently, the plugin uses sensible defaults. Future versions will include:
 
 **Plugin conflicts**
 - Try disabling other terminal/command-line plugins temporarily
-- Check for conflicts with vim-mode or other keyboard-heavy plugins
 
 **Performance issues**
 - Large terminal output may cause slowdown
-- Try clearing terminal history with `Cmd/Ctrl + K`
+- Try clearing terminal history with `Ctrl + K`
 - Consider closing unused terminal tabs
 
 ### Getting Help
 
-1. **Check Issues**: [GitHub Issues](https://github.com/jwplatta/obsidian-terminal/issues)
+1. **Check Issues**: [GitHub Issues](https://github.com/jwplatta/obsidian-term/issues)
 2. **Create Issue**: Report bugs or request features
 
 ## Development
@@ -129,7 +120,7 @@ Currently, the plugin uses sensible defaults. Future versions will include:
 ### Building from Source
 ```bash
 # Clone repository
-git clone https://github.com/jwplatta/obsidian-terminal.git
+git clone https://github.com/jwplatta/obsidian-term.git
 cd obsidian-terminal
 
 # Install dependencies
@@ -150,6 +141,7 @@ src/
   buildTerminal.ts      # Terminal configuration & PTY
   pty_helper.py         # Python PTY process handler
 main.ts                   # Plugin entry point
+styles.css                # Plugin styling
 manifest.json             # Plugin manifest
 package.json              # Node.js dependencies
 ```
@@ -162,15 +154,7 @@ package.json              # Node.js dependencies
 4. Push to branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-## Technical Details
-
-### Architecture
-- **Frontend**: React 19+ with TypeScript
-- **Terminal**: xterm.js with FitAddon
-- **Process**: Python PTY helper for shell integration
-- **Build**: esbuild for fast compilation
-
-### Dependencies
+## Dependencies
 - `@xterm/xterm`: Terminal emulator
 - `@xterm/addon-fit`: Terminal resizing
 - `react`: UI framework
@@ -184,16 +168,10 @@ MIT License - see [LICENSE](LICENSE) file for details.
 
 - Built by [Joseph Platta](https://github.com/jwplatta)
 - Uses [xterm.js](https://xtermjs.org/) for terminal emulation
-- Inspired by various terminal implementations in VS Code and other editors
 
 ## Changelog
 
-### Version 1.0.0
-- Initial release
-- Full terminal emulation with xterm.js
-- PTY process integration
-- Obsidian theme integration
-- Basic keyboard shortcuts
+See [CHANGELOG](CHANGELOG)
 
 ---
 
