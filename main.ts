@@ -6,14 +6,13 @@ export default class ObsidianTerminalPlugin extends Plugin {
 		// Register terminal view with plugin instance
 		this.registerView(TERMINAL_VIEW_TYPE, (leaf) => new TerminalView(leaf, this));
 
-		this.addRibbonIcon('terminal', 'Open Terminal', () => {
+		this.addRibbonIcon('terminal', 'New Terminal', (evt: MouseEvent) => {
 			this.activateView();
 		});
 
-
 		this.addCommand({
-			id: 'open-terminal',
-			name: 'Open Terminal',
+			id: 'new-terminal',
+			name: 'New Terminal',
 			callback: () => this.activateView()
 		});
 	}
