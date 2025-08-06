@@ -104,12 +104,6 @@ export const buildTerminal = (terminalRef: React.RefObject<HTMLDivElement>, cols
   terminal.attachCustomKeyEventHandler((event: KeyboardEvent) => {
     // Debug key events
     if ((event.metaKey || event.ctrlKey) && event.key === 'k') {
-        key: event.key,
-        metaKey: event.metaKey,
-        ctrlKey: event.ctrlKey,
-        altKey: event.altKey,
-        shiftKey: event.shiftKey
-      });
       event.preventDefault();
       event.stopPropagation();
       terminal.clear();
