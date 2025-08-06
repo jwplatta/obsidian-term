@@ -37,26 +37,33 @@ export class TerminalView extends ItemView {
 	}
 
 	private async render() {
-		const container = this.containerEl.children[1];
-		container.empty();
+		try {
+			const container = this.containerEl.children[1];
+			container.empty();
 
-		const vaultPath = (this.app.vault.adapter as any).basePath;
-		const fullPluginPath = path.join(vaultPath, this.plugin.manifest.dir);
+			const vaultPath = (this.app.vault.adapter as any).basePath;
+			const fullPluginPath = path.join(vaultPath, this.plugin.manifest.dir);
 
-		this.root = createRoot(container);
-		const handleTerminalExit = () => {
-			this.leaf.detach();
-		};
+			this.root = createRoot(container);
+			const handleTerminalExit = () => {
+				this.leaf.detach();
+			};
 
-		this.root.render(
-			<StrictMode>
-				<TerminalComponent
-					pluginPath={fullPluginPath}
-					vaultPath={vaultPath}
-					defaultShell={this.plugin.settings.defaultShell}
-					onExit={handleTerminalExit}
-				/>
-			</StrictMode>
-		);
+			this.root.render(
+				<StrictMode>
+					<TerminalComponent
+						pluginPath={fullPluginPath}
+						vaultPath={vaultPath}
+						defaultShell={this.plugin.settings.defaultShell}
+						onExit={handleTerminalExit}
+					/>
+				</StrictMode>
+			);
+		} catch (error) {
+			console.error('Terminal render error:', error);
+			const container = this.containerEl.children[1];
+			container.empty();
+			container.createEl('div', { text: 'Failed to initialize terminal. Check console for details.' });
+		}
 	}
 }
