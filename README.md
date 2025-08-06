@@ -30,12 +30,6 @@ A simple terminal interface plugin for Obsidian that brings native terminal func
 
 ## Installation
 
-### From Obsidian Community Plugins
-1. Open Obsidian Settings
-2. Navigate to Community Plugins and disable Safe Mode
-3. Click Browse and search for "Terminal"
-4. Install and enable the plugin
-
 ### Manual Installation
 1. Download the latest release from [GitHub Releases](https://github.com/jwplatta/obsidian-term/releases)
 2. Extract files to `<vault>/.obsidian/plugins/obsidian-term/`
