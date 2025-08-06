@@ -45,7 +45,12 @@ export default class ObsidianTerminalPlugin extends Plugin {
 	}
 
 	async loadSettings() {
-		this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
+		try {
+			this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
+		} catch (error) {
+			console.error('Failed to load settings, using defaults:', error);
+			this.settings = Object.assign({}, DEFAULT_SETTINGS);
+		}
 	}
 
 	async saveSettings() {
