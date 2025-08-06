@@ -1,4 +1,4 @@
-# Obsidian Terminal
+# Obsidian Term
 
 A full-featured terminal interface plugin for Obsidian that brings native terminal functionality directly into your knowledge workspace. Built with React and xterm.js, it provides a seamless command-line experience within Obsidian.
 
