@@ -41,7 +41,7 @@ const calculateTerminalDimensions = (container: HTMLElement): TerminalDimensions
   const containerHeight = containerRect.height;
 
   // Calculate dimensions with some padding to account for terminal margins/borders
-  const padding = 50; // Small padding to prevent overflow
+  const padding = 80; // Small padding to prevent overflow
   const cols = Math.max(10, Math.floor((containerWidth - padding) / charWidth));
   const rows = Math.max(5, Math.floor((containerHeight - padding) / charHeight));
 
