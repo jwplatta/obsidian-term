@@ -1,0 +1,49 @@
+name: Build and Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to release (e.g. 1.0.1)'
+        required: true
+        default: '1.0.1'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Use Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        
+    - name: Build plugin
+      run: |
+        npm ci
+        npm run build
+        
+    - name: Create release zip
+      run: |
+        mkdir release
+        cp main.js manifest.json styles.css versions.json release/
+        cp src/pty_helper.py release/
+        cd release && zip -r ../obsidian-terminal-${{ github.event.inputs.version }}.zip .
+        
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: ${{ github.event.inputs.version }}
+        name: Release ${{ github.event.inputs.version }}
+        body: |
+          See [CHANGELOG.md](https://github.com/${{ github.repository }}/blob/main/CHANGELOG.md) for details.
+        files: |
+          obsidian-terminal-${{ github.event.inputs.version }}.zip
+          main.js
+          manifest.json
+          styles.css
+        draft: false
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
