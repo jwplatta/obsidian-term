@@ -7,31 +7,79 @@ interface TerminalComponentProps {
   onExit?: () => void;
 }
 
+interface TerminalDimensions {
+  cols: number;
+  rows: number;
+}
+
+// Calculate terminal dimensions based on container size
+const calculateTerminalDimensions = (container: HTMLElement): TerminalDimensions => {
+  // Terminal font settings (should match buildTerminal.ts)
+  const fontSize = 14;
+  const fontFamily = 'Monaco, Menlo, "Ubuntu Mono", monospace';
+  const lineHeight = 1.2;
+
+  // Create a temporary element to measure character dimensions
+  const measureEl = document.createElement('div');
+  measureEl.style.fontFamily = fontFamily;
+  measureEl.style.fontSize = `${fontSize}px`;
+  measureEl.style.lineHeight = `${lineHeight}`;
+  measureEl.style.position = 'absolute';
+  measureEl.style.visibility = 'hidden';
+  measureEl.style.whiteSpace = 'pre';
+  measureEl.textContent = 'M'; // Use 'M' as it's typically the widest character
+
+  document.body.appendChild(measureEl);
+  const charWidth = measureEl.offsetWidth;
+  const charHeight = measureEl.offsetHeight;
+  document.body.removeChild(measureEl);
+
+  // Get container dimensions
+  const containerRect = container.getBoundingClientRect();
+  const containerWidth = containerRect.width;
+  const containerHeight = containerRect.height;
+
+  // Calculate dimensions with some padding to account for terminal margins/borders
+  const padding = 50; // Small padding to prevent overflow
+  const cols = Math.max(10, Math.floor((containerWidth - padding) / charWidth));
+  const rows = Math.max(5, Math.floor((containerHeight - padding) / charHeight));
+
+  console.log('Terminal dimensions calculated:', {
+    containerWidth,
+    containerHeight,
+    charWidth,
+    charHeight,
+    cols,
+    rows
+  });
+
+  return { cols, rows };
+};
+
 const TerminalComponent = ({ pluginPath, vaultPath, onExit }: TerminalComponentProps) => {
   const terminalRef = useRef(null);
 
   useEffect(() => {
     if (!terminalRef.current) return;
 
-    const terminal = buildTerminal(terminalRef, pluginPath, vaultPath, onExit);
+    // Calculate initial dimensions
+    const dimensions = calculateTerminalDimensions(terminalRef.current);
+    const terminal = buildTerminal(terminalRef, dimensions.cols, dimensions.rows, pluginPath, vaultPath, onExit);
 
-    // Open terminal and fit it
+    // Open terminal
     if (terminalRef.current) {
       terminal.open(terminalRef.current);
 
-      // Fit terminal to container after opening
-      const fitAddon = (terminal as any).fitAddon;
-      if (fitAddon) {
-        // Use setTimeout to ensure DOM is ready
-        setTimeout(() => {
-          fitAddon.fit();
-        }, 100);
-      }
-
-      // Handle container resize
+      // Handle container resize with dynamic terminal resizing
       const resizeObserver = new ResizeObserver(() => {
-        if (fitAddon) {
-          setTimeout(() => fitAddon.fit(), 10);
+        if (terminalRef.current) {
+          const newDimensions = calculateTerminalDimensions(terminalRef.current);
+
+          // Only resize if dimensions actually changed
+          if (newDimensions.cols !== terminal.cols || newDimensions.rows !== terminal.rows) {
+            console.log('Resizing terminal:', newDimensions);
+            terminal.resize(newDimensions.cols, newDimensions.rows);
+          }
         }
       });
 
@@ -50,14 +98,18 @@ const TerminalComponent = ({ pluginPath, vaultPath, onExit }: TerminalComponentP
   }, []);
 
   return (
-    <div 
-      style={{ 
-        height: '100%', 
-        width: '100%', 
+    <div
+      style={{
+        paddingLeft: '10px',
+        paddingBottom: '50px',
+        height: '100%',
+        width: '100%',
         display: 'flex',
-        flexDirection: 'column'
-      }} 
-      ref={terminalRef} 
+        flexDirection: 'column',
+        boxSizing: 'border-box',
+        overflow: 'auto'
+      }}
+      ref={terminalRef}
     />
   );
 };
